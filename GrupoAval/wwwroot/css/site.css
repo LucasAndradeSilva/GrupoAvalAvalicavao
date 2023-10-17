@@ -28,3 +28,10 @@ body {
 .material-icons {
     vertical-align: middle!important;
 }
+
+.alert {
+    position: absolute !important;
+    z-index: 1;
+    margin-top: 7vh;
+    margin-left: 10px;
+}

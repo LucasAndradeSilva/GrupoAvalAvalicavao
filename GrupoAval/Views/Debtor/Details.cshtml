@@ -1,0 +1,40 @@
+﻿@model GrupoAval.Models.Debtor
+
+@{
+    ViewData["Title"] = "Detalhes";
+}
+
+<div class="card shadow p-3">
+    <h2 class="text-center">Detalhes</h2>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ID)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ID)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CPF)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CPF)
+        </dd>
+    </dl>
+
+    <div>
+        <a asp-action="Index" class="btn btn-secondary">
+            <span class="material-icons">
+                arrow_back
+            </span>
+            Voltar a lista
+        </a>
+    </div>
+</div>
+

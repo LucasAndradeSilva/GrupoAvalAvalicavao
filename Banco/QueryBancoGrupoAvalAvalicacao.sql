@@ -55,6 +55,8 @@ BEGIN
     UPDATE Tb_Debtor
     SET "Name" = @Name, CPF = @CPF
     WHERE ID = @ID
+
+	SELECT 'Devedor atualizado com sucesso!'
 END;
 
 CREATE PROCEDURE P_DeleteDebtor
@@ -63,6 +65,8 @@ AS
 BEGIN
     DELETE FROM Tb_Debtor
     WHERE ID = @ID
+
+	SELECT 'Devedor deletado com sucesso!'
 END;
 
 CREATE PROCEDURE P_GetAllDebtors

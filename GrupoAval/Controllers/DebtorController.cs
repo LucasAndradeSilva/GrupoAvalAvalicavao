@@ -2,7 +2,9 @@
 using GrupoAval.Models;
 using GrupoAval.Services.Interface;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Numerics;
 using static GrupoAval.Models.Alert;
 
 namespace GrupoAval.Controllers
@@ -15,20 +17,41 @@ namespace GrupoAval.Controllers
         {
             _debtor = debtor;
         }
-
-        // GET: DevedorController
-        public IActionResult Index()
+        
+        public async Task<IActionResult> IndexAsync()
 		{
-			return View();
-		}
+			try
+			{
+				var result = await _debtor.ListDebtor();
 
-		// GET: DevedorController/Details/5
-		public IActionResult Details(int id)
+				if (!result.Success)
+				{
+					using (new Alert(AlertType.danger, result.Data, HttpContext))
+					return View();
+				}
+
+				return View((IEnumerable<Debtor>)result.Data);
+					
+			}
+			catch
+			{ 
+				return View();
+			}
+		}
+		
+		public async Task<IActionResult> Details(int id)
 		{
-			return View();
+			try
+			{
+				var result = await _debtor.GetDebtor(id);
+                return View((Debtor)result.Data);
+            }
+			catch (Exception)
+			{
+                return View();
+            }			
 		}
-
-		// GET: DevedorController/Create
+		
 		public IActionResult Create()
 		{
 			return View();
@@ -43,57 +66,69 @@ namespace GrupoAval.Controllers
                 var result = await _debtor.InsertDebtor(debtor);
 
 				if (result.Success)				
-					using(new Alert(AlertType.success, result.Message, HttpContext));
+					using(new Alert(AlertType.success, result.Data, HttpContext));
 				else
-                    using (new Alert(AlertType.danger, result.Message, HttpContext));
+                    using (new Alert(AlertType.danger, result.Data, HttpContext));
 
                 return RedirectToAction("Index");
 			}
 			catch
 			{
-				return View();
+				return RedirectToAction("Create");
 			}
 		}
 
-		// GET: DevedorController/Edit/5
-		public IActionResult Edit(int id)
+		public async Task<IActionResult> EditAsync(int id)
 		{
-			return View();
-		}
+            try
+            {
+                var result = await _debtor.GetDebtor(id);
+                return View((Debtor)result.Data);
+            }
+            catch (Exception)
+            {
+                return View();
+            }
+        }
 
-		// POST: DevedorController/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Edit(int id, IFormCollection collection)
+		public async Task<IActionResult> EditAsync(Debtor debtor)
 		{
 			try
 			{
-				return RedirectToAction(nameof(Index));
+				var result = await _debtor.UpdateDebtor(debtor);
+
+                if (result.Success)
+                    using (new Alert(AlertType.success, result.Data, HttpContext)) ;
+                else
+                    using (new Alert(AlertType.danger, result.Data, HttpContext)) ;
+
+                return RedirectToAction("Edit", new { debtor.ID });
+            }
+			catch
+			{
+                return RedirectToAction("Edit");
+            }
+		}
+
+		[HttpPost]		
+		public async Task<IActionResult> DeleteAsync(int id)
+        {
+            try
+			{
+				var result = await _debtor.DeleteDebtor(id);
+
+                if (result.Success)
+                    using (new Alert(AlertType.success, result.Data, HttpContext)) ;
+                else
+                    using (new Alert(AlertType.danger, result.Data, HttpContext)) ;
+
+				return Ok();
 			}
 			catch
 			{
-				return View();
-			}
-		}
-
-		// GET: DevedorController/Delete/5
-		public IActionResult Delete(int id)
-		{
-			return View();
-		}
-
-		// POST: DevedorController/Delete/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public IActionResult Delete(int id, IFormCollection collection)
-		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
+				return Ok();
 			}
 		}
 	}

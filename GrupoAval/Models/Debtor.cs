@@ -9,12 +9,13 @@ namespace GrupoAval.Models
     {
 		public int ID { get; set; }
 
-		[DisplayName("Nome")]	
+		[DisplayName("Nome")]		
 		[Required(ErrorMessage = "O nome é obrigátorio")]
 		public string Name { get; set; }
 
 		[DisplayName("CPF")]
-		[Required(ErrorMessage = "O CPF é obrigátorio")]
+        [MinLength(14, ErrorMessage = "Complete seu CPF")]
+        [Required(ErrorMessage = "O CPF é obrigátorio")]
 		public string CPF { get; set; }
 
 		public List<Contract> Contracts { get; set; }
