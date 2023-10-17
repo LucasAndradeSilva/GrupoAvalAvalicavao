@@ -1,6 +1,7 @@
 ﻿namespace GrupoAval.Service.Interface
 {
-	public interface IParcelaInterface
+	public interface IContractInterface
 	{
+
 	}
 }

@@ -20,3 +20,7 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.material-icons {
+    vertical-align: middle!important;
+}

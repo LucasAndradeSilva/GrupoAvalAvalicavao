@@ -3,30 +3,30 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GrupoAval.Controllers
 {
-	public class ParcelaController : Controller
+	public class DebtorController : Controller
 	{
-		// GET: ParcelaController
-		public ActionResult Index()
+		// GET: DevedorController
+		public IActionResult Index()
 		{
 			return View();
 		}
 
-		// GET: ParcelaController/Details/5
-		public ActionResult Details(int id)
+		// GET: DevedorController/Details/5
+		public IActionResult Details(int id)
 		{
 			return View();
 		}
 
-		// GET: ParcelaController/Create
-		public ActionResult Create()
+		// GET: DevedorController/Create
+		public IActionResult Create()
 		{
 			return View();
 		}
 
-		// POST: ParcelaController/Create
+		// POST: DevedorController/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Create(IFormCollection collection)
+		public IActionResult Create(IFormCollection collection)
 		{
 			try
 			{
@@ -38,16 +38,16 @@ namespace GrupoAval.Controllers
 			}
 		}
 
-		// GET: ParcelaController/Edit/5
-		public ActionResult Edit(int id)
+		// GET: DevedorController/Edit/5
+		public IActionResult Edit(int id)
 		{
 			return View();
 		}
 
-		// POST: ParcelaController/Edit/5
+		// POST: DevedorController/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Edit(int id, IFormCollection collection)
+		public IActionResult Edit(int id, IFormCollection collection)
 		{
 			try
 			{
@@ -59,16 +59,16 @@ namespace GrupoAval.Controllers
 			}
 		}
 
-		// GET: ParcelaController/Delete/5
-		public ActionResult Delete(int id)
+		// GET: DevedorController/Delete/5
+		public IActionResult Delete(int id)
 		{
 			return View();
 		}
 
-		// POST: ParcelaController/Delete/5
+		// POST: DevedorController/Delete/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Delete(int id, IFormCollection collection)
+		public IActionResult Delete(int id, IFormCollection collection)
 		{
 			try
 			{

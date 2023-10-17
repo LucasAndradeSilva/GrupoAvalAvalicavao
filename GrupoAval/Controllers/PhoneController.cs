@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GrupoAval.Controllers
 {
-	public class TelefoneController : Controller
+	public class PhoneController : Controller
 	{
 		// GET: TelefoneController
 		public ActionResult Index()

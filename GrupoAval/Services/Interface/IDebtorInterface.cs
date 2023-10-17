@@ -1,7 +1,6 @@
 ﻿namespace GrupoAval.Service.Interface
 {
-	public interface IContratoInterface
+	public interface IDebtorInterface
 	{
-
 	}
 }

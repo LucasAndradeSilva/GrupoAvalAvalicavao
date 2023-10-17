@@ -1,0 +1,72 @@
+﻿@model IEnumerable<GrupoAval.Models.Debtor>
+
+@{
+    ViewData["Title"] = "Lista";
+}
+
+<div class="card shadow p-3">
+    
+    <h2 class="text-center">Lista de Devedores</h2>
+
+    <hr/>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">
+            <span class="material-icons">
+                person_add
+            </span>
+
+            Cadastrar
+        </a>
+    </p>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CPF)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model is not null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CPF)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4">
+                        <h4 class="text-center">Nenhum devedor encontrado</h4>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+</div>

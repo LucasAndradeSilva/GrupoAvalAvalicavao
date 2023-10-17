@@ -1,36 +1,79 @@
-CREATE DATABASE DBCobrancaAvalicacao
+CREATE DATABASE DB_CobrancaAvalicacao
 
-USE DBCobrancaAvalicacao
+USE DB_CobrancaAvalicacao
 
--- Tabela "Devedor"
-CREATE TABLE Devedor (
+
+CREATE TABLE Tb_Debtor (
     ID INT PRIMARY KEY,
-    Nome VARCHAR(255),
+    "Name" VARCHAR(255),
     CPF VARCHAR(11) UNIQUE
 );
 
--- Tabela "Contrato"
-CREATE TABLE Contrato (
+CREATE TABLE Tb_Contract (
     ID INT PRIMARY KEY,
-    Devedor_ID INT,
-    NumeroContrato VARCHAR(20),
-    FOREIGN KEY (Devedor_ID) REFERENCES Devedor(ID)
+    Debtor_ID INT,
+    ContractNumber VARCHAR(20),
+    FOREIGN KEY (Debtor_ID) REFERENCES Tb_Debtor(ID)
 );
 
--- Tabela "Parcela"
-CREATE TABLE Parcela (
+CREATE TABLE Tb_Installment (
     ID INT PRIMARY KEY,
-    Contrato_ID INT,
-    Valor DECIMAL(10, 2),
-    DataVencimento DATE,
-    DataPagamento DATE,
-    FOREIGN KEY (Contrato_ID) REFERENCES Contrato(ID)
+    Contract_ID INT,
+    Amount DECIMAL(10, 2),
+    DueDate DATE,
+    PaymentDate DATE,
+    FOREIGN KEY (Contract_ID) REFERENCES Tb_Contract(ID)
 );
 
--- Tabela "Telefone"
-CREATE TABLE Telefone (
+CREATE TABLE Tb_Phone (
     ID INT PRIMARY KEY,
-    Devedor_ID INT,
-    NumeroTelefone VARCHAR(20),
-    FOREIGN KEY (Devedor_ID) REFERENCES Devedor(ID)
+    Debtor_ID INT,
+    PhoneNumber VARCHAR(20),
+    FOREIGN KEY (Debtor_ID) REFERENCES Tb_Debtor(ID)
 );
+
+-- ==============
+-- = Procedures =
+-- ==============
+
+CREATE PROCEDURE P_InsertDebtor
+    @Name VARCHAR(255),
+    @CPF VARCHAR(11)
+AS
+BEGIN
+    INSERT INTO Debtor ("Name", CPF)
+    VALUES (@Name, @CPF)
+END;
+
+CREATE PROCEDURE P_UpdateDebtor
+    @ID INT,
+    @Name VARCHAR(255),
+    @CPF VARCHAR(11)
+AS
+BEGIN
+    UPDATE Debtor
+    SET "Name" = @Name, CPF = @CPF
+    WHERE ID = @ID
+END;
+
+CREATE PROCEDURE P_DeleteDebtor
+    @ID INT
+AS
+BEGIN
+    DELETE FROM Debtor
+    WHERE ID = @ID
+END;
+
+CREATE PROCEDURE P_GetAllDebtors
+AS
+BEGIN
+    SELECT * FROM Debtor
+END;
+
+CREATE PROCEDURE P_GetDebtor
+    @ID INT
+AS
+BEGIN
+    SELECT * FROM Debtor
+    WHERE ID = @ID
+END;

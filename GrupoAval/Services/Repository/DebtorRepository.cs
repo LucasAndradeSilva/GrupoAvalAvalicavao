@@ -2,7 +2,7 @@
 
 namespace GrupoAval.Services.Repository
 {
-	public class ParcelaRepository : IParcelaInterface
+	public class DebtorRepository : IDebtorInterface
 	{
 	}
 }

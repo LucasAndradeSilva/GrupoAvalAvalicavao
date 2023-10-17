@@ -1,3 +1,5 @@
+using GrupoAval.Extensions;
+
 namespace GrupoAval
 {
 	public class Program
@@ -5,17 +7,14 @@ namespace GrupoAval
 		public static void Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
-
-			// Add services to the container.
+			
 			builder.Services.AddControllersWithViews();
+			builder.Services.AddDependencyInjectionCustom();
 
-			var app = builder.Build();
-
-			// Configure the HTTP request pipeline.
+            var app = builder.Build();
+			
 			if (!app.Environment.IsDevelopment())
-			{
-				//app.UseExceptionHandler("/Home/Error");
-				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+			{				
 				app.UseHsts();
 			}
 
@@ -28,7 +27,7 @@ namespace GrupoAval
 
 			app.MapControllerRoute(
 				name: "default",
-				pattern: "{controller=Devedor}/{action=Index}/{id?}");
+				pattern: "{controller=Debtor}/{action=Index}/{id?}");
 
 			app.Run();
 		}

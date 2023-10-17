@@ -3,27 +3,27 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GrupoAval.Controllers
 {
-	public class ContratoController : Controller
+	public class InstallmentController : Controller
 	{
-		// GET: ContratoController
+		// GET: ParcelaController
 		public ActionResult Index()
 		{
 			return View();
 		}
 
-		// GET: ContratoController/Details/5
+		// GET: ParcelaController/Details/5
 		public ActionResult Details(int id)
 		{
 			return View();
 		}
 
-		// GET: ContratoController/Create
+		// GET: ParcelaController/Create
 		public ActionResult Create()
 		{
 			return View();
 		}
 
-		// POST: ContratoController/Create
+		// POST: ParcelaController/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Create(IFormCollection collection)
@@ -38,13 +38,13 @@ namespace GrupoAval.Controllers
 			}
 		}
 
-		// GET: ContratoController/Edit/5
+		// GET: ParcelaController/Edit/5
 		public ActionResult Edit(int id)
 		{
 			return View();
 		}
 
-		// POST: ContratoController/Edit/5
+		// POST: ParcelaController/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Edit(int id, IFormCollection collection)
@@ -59,13 +59,13 @@ namespace GrupoAval.Controllers
 			}
 		}
 
-		// GET: ContratoController/Delete/5
+		// GET: ParcelaController/Delete/5
 		public ActionResult Delete(int id)
 		{
 			return View();
 		}
 
-		// POST: ContratoController/Delete/5
+		// POST: ParcelaController/Delete/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Delete(int id, IFormCollection collection)

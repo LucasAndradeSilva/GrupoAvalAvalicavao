@@ -2,7 +2,7 @@
 
 namespace GrupoAval.Services.Repository
 {
-	public class DevedorRepository : IDevedorInterface
+	public class ContractRepository : IContractInterface
 	{
 	}
 }

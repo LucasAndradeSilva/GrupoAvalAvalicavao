@@ -1,8 +1,9 @@
 ﻿using GrupoAval.Service.Interface;
+using GrupoAval.Services.Interface;
 
 namespace GrupoAval.Services.Repository
 {
-	public class ContratoRepository : IContratoInterface
+	public class PhoneRepository : IPhoneInterface
 	{
 	}
 }

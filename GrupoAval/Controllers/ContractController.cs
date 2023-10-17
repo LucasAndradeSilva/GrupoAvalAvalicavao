@@ -3,30 +3,30 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GrupoAval.Controllers
 {
-	public class DevedorController : Controller
+	public class ContractController : Controller
 	{
-		// GET: DevedorController
-		public IActionResult Index()
+		// GET: ContratoController
+		public ActionResult Index()
 		{
 			return View();
 		}
 
-		// GET: DevedorController/Details/5
-		public IActionResult Details(int id)
+		// GET: ContratoController/Details/5
+		public ActionResult Details(int id)
 		{
 			return View();
 		}
 
-		// GET: DevedorController/Create
-		public IActionResult Create()
+		// GET: ContratoController/Create
+		public ActionResult Create()
 		{
 			return View();
 		}
 
-		// POST: DevedorController/Create
+		// POST: ContratoController/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Create(IFormCollection collection)
+		public ActionResult Create(IFormCollection collection)
 		{
 			try
 			{
@@ -38,16 +38,16 @@ namespace GrupoAval.Controllers
 			}
 		}
 
-		// GET: DevedorController/Edit/5
-		public IActionResult Edit(int id)
+		// GET: ContratoController/Edit/5
+		public ActionResult Edit(int id)
 		{
 			return View();
 		}
 
-		// POST: DevedorController/Edit/5
+		// POST: ContratoController/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Edit(int id, IFormCollection collection)
+		public ActionResult Edit(int id, IFormCollection collection)
 		{
 			try
 			{
@@ -59,16 +59,16 @@ namespace GrupoAval.Controllers
 			}
 		}
 
-		// GET: DevedorController/Delete/5
-		public IActionResult Delete(int id)
+		// GET: ContratoController/Delete/5
+		public ActionResult Delete(int id)
 		{
 			return View();
 		}
 
-		// POST: DevedorController/Delete/5
+		// POST: ContratoController/Delete/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Delete(int id, IFormCollection collection)
+		public ActionResult Delete(int id, IFormCollection collection)
 		{
 			try
 			{

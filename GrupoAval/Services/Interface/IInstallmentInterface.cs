@@ -1,6 +1,6 @@
 ﻿namespace GrupoAval.Service.Interface
 {
-	public interface IDevedorInterface
+	public interface IInstallmentInterface
 	{
 	}
 }
