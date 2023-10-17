@@ -2,22 +2,21 @@ CREATE DATABASE DB_CobrancaAvalicacao
 
 USE DB_CobrancaAvalicacao
 
-
 CREATE TABLE Tb_Debtor (
-    ID INT PRIMARY KEY,
+    ID INT IDENTITY PRIMARY KEY,
     "Name" VARCHAR(255),
-    CPF VARCHAR(11) UNIQUE
+    CPF VARCHAR(11)
 );
 
 CREATE TABLE Tb_Contract (
-    ID INT PRIMARY KEY,
+    ID INT IDENTITY PRIMARY KEY,
     Debtor_ID INT,
     ContractNumber VARCHAR(20),
     FOREIGN KEY (Debtor_ID) REFERENCES Tb_Debtor(ID)
 );
 
 CREATE TABLE Tb_Installment (
-    ID INT PRIMARY KEY,
+    ID INT IDENTITY PRIMARY KEY,
     Contract_ID INT,
     Amount DECIMAL(10, 2),
     DueDate DATE,
@@ -26,7 +25,7 @@ CREATE TABLE Tb_Installment (
 );
 
 CREATE TABLE Tb_Phone (
-    ID INT PRIMARY KEY,
+    ID INT IDENTITY PRIMARY KEY,
     Debtor_ID INT,
     PhoneNumber VARCHAR(20),
     FOREIGN KEY (Debtor_ID) REFERENCES Tb_Debtor(ID)
@@ -41,8 +40,10 @@ CREATE PROCEDURE P_InsertDebtor
     @CPF VARCHAR(11)
 AS
 BEGIN
-    INSERT INTO Debtor ("Name", CPF)
+    INSERT INTO Tb_Debtor ("Name", CPF)
     VALUES (@Name, @CPF)
+	
+	SELECT 'Devedor criado com sucesso!'
 END;
 
 CREATE PROCEDURE P_UpdateDebtor
@@ -51,7 +52,7 @@ CREATE PROCEDURE P_UpdateDebtor
     @CPF VARCHAR(11)
 AS
 BEGIN
-    UPDATE Debtor
+    UPDATE Tb_Debtor
     SET "Name" = @Name, CPF = @CPF
     WHERE ID = @ID
 END;
@@ -60,20 +61,20 @@ CREATE PROCEDURE P_DeleteDebtor
     @ID INT
 AS
 BEGIN
-    DELETE FROM Debtor
+    DELETE FROM Tb_Debtor
     WHERE ID = @ID
 END;
 
 CREATE PROCEDURE P_GetAllDebtors
 AS
 BEGIN
-    SELECT * FROM Debtor
+    SELECT * FROM Tb_Debtor
 END;
 
 CREATE PROCEDURE P_GetDebtor
     @ID INT
 AS
 BEGIN
-    SELECT * FROM Debtor
+    SELECT * FROM Tb_Debtor
     WHERE ID = @ID
 END;

@@ -1,4 +1,4 @@
-﻿namespace GrupoAval.Service.Interface
+﻿namespace GrupoAval.Services.Interface
 {
 	public interface IContractInterface
 	{

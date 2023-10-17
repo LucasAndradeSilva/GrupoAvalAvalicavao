@@ -16,26 +16,37 @@
 
             <div class="form-group col-md-6">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" placeholder="Ex: Lucas Andrade"/>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
             <div class="form-group col-md-6">
                 <label asp-for="CPF" class="control-label"></label>
-                <input asp-for="CPF" class="form-control" />
+                <input asp-for="CPF" class="form-control input-cpf" placeholder="000.000.000-00" />
                 <span asp-validation-for="CPF" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-                <a asp-action="Index">Back to List</a>
+                <button type="submit" value="Cadastrar" class="btn btn-success">
+                    <span class="material-icons">
+                        person_add
+                    </span>
+                    Cadastrar
+                </button>
+
+                <a asp-action="Index" class="btn btn-secondary">
+                    <span class="material-icons">
+                        arrow_back
+                    </span>
+                    Voltar a lista
+                </a>
             </div>
         </div>
 
     </form>    
 </div>
 
-@section Scripts {
+@section Scripts {    
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

@@ -10,6 +10,7 @@ namespace GrupoAval
 			
 			builder.Services.AddControllersWithViews();
 			builder.Services.AddDependencyInjectionCustom();
+			builder.Services.AddSession();
 
             var app = builder.Build();
 			
@@ -20,9 +21,8 @@ namespace GrupoAval
 
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
-
+			app.UseSession(); 
 			app.UseRouting();
-
 			app.UseAuthorization();
 
 			app.MapControllerRoute(

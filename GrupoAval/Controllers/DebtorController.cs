@@ -1,12 +1,23 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
+using GrupoAval.Models;
+using GrupoAval.Services.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static GrupoAval.Models.Alert;
 
 namespace GrupoAval.Controllers
 {
 	public class DebtorController : Controller
 	{
-		// GET: DevedorController
-		public IActionResult Index()
+		private IDebtorInterface _debtor;
+
+        public DebtorController(IDebtorInterface debtor)
+        {
+            _debtor = debtor;
+        }
+
+        // GET: DevedorController
+        public IActionResult Index()
 		{
 			return View();
 		}
@@ -22,15 +33,21 @@ namespace GrupoAval.Controllers
 		{
 			return View();
 		}
-
-		// POST: DevedorController/Create
+		
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Create(IFormCollection collection)
+		public async Task<IActionResult> CreateAsync(Debtor debtor)
 		{
 			try
 			{
-				return RedirectToAction(nameof(Index));
+                var result = await _debtor.InsertDebtor(debtor);
+
+				if (result.Success)				
+					using(new Alert(AlertType.success, result.Message, HttpContext));
+				else
+                    using (new Alert(AlertType.danger, result.Message, HttpContext));
+
+                return RedirectToAction("Index");
 			}
 			catch
 			{
