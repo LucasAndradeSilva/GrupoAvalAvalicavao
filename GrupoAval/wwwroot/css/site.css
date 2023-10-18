@@ -35,3 +35,17 @@ body {
     margin-top: 7vh;
     margin-left: 10px;
 }
+
+.no-input{
+    border: 0px!important;
+    width: 40%!important;
+       
+}
+
+.input-phone:focus {
+    width: 40% !important;
+}
+
+.telefone label {
+    margin-top: 7px;
+}

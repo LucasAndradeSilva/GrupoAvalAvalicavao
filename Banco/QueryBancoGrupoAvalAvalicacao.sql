@@ -2,10 +2,12 @@ CREATE DATABASE DB_CobrancaAvalicacao
 
 USE DB_CobrancaAvalicacao
 
+Select * from Tb_Debtor
+
 CREATE TABLE Tb_Debtor (
     ID INT IDENTITY PRIMARY KEY,
     "Name" VARCHAR(255),
-    CPF VARCHAR(11)
+    CPF VARCHAR(14)
 );
 
 CREATE TABLE Tb_Contract (
@@ -35,6 +37,7 @@ CREATE TABLE Tb_Phone (
 -- = Procedures =
 -- ==============
 
+-- Procs do Devedor
 CREATE PROCEDURE P_InsertDebtor
     @Name VARCHAR(255),
     @CPF VARCHAR(11)
@@ -51,9 +54,9 @@ CREATE PROCEDURE P_UpdateDebtor
     @Name VARCHAR(255),
     @CPF VARCHAR(11)
 AS
-BEGIN
+BEGIN	
     UPDATE Tb_Debtor
-    SET "Name" = @Name, CPF = @CPF
+    SET Name = @Name, CPF = @CPF
     WHERE ID = @ID
 
 	SELECT 'Devedor atualizado com sucesso!'
@@ -81,4 +84,34 @@ AS
 BEGIN
     SELECT * FROM Tb_Debtor
     WHERE ID = @ID
+END;
+
+-- Procs do Telefone
+CREATE PROCEDURE P_BulkInsertPhones
+    @Debtor_ID INT,
+    @PhoneNumbers VARCHAR(MAX)
+AS
+BEGIN
+    CREATE TABLE TempPhoneNumbers (Debtor_ID INT, PhoneNumber VARCHAR(20));
+    
+    INSERT INTO TempPhoneNumbers (PhoneNumber)
+    SELECT value FROM STRING_SPLIT(@PhoneNumbers, ',');
+
+    INSERT INTO Tb_Phone (Debtor_ID, PhoneNumber)
+    SELECT @Debtor_ID, PhoneNumber
+    FROM TempPhoneNumbers;
+
+    DROP TABLE TempPhoneNumbers;
+
+    SELECT 'Telefones inseridos com sucesso!';
+END;
+
+CREATE PROCEDURE P_DeletePhone
+    @ID INT
+AS
+BEGIN
+    DELETE FROM Tb_Phone
+    WHERE ID = @ID
+
+	SELECT 'Telefone deletado com sucesso!'
 END;

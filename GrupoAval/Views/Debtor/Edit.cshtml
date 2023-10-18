@@ -30,9 +30,45 @@
                 <label asp-for="CPF" class="control-label"></label>
                 <input asp-for="CPF" class="form-control input-cpf" placeholder="000.000.000-00" />
                 <span asp-validation-for="CPF" class="text-danger"></span>
-            </div>
+            </div>            
 
-            <div class="form-group">
+            <div class="form-group col-md-6">
+                <h4>Telefones</h4>
+
+                <div>
+                    <label>Digite o telefone para adicionar</label>
+                    <div class="input-group mb-3">
+                        <input id="input-telefone" type="text" class="form-control input-phone" placeholder="(00) 0000-0000" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button id="btn-adicionar-telefone" class="btn btn-outline-success" type="button">Adicionar</button>
+                        </div>
+                    </div>
+                    <span class="text-danger txt-error" style="display: none">*Preencha o campo telefone</span>
+                </div>                
+
+                <div class="telefones">
+                    @if ((Model?.Phones?.Count ?? 0) > 0)
+                    {                    
+                        @for (int i = 0; i < Model.Phones.Count; i++)
+                        {
+                            var phone = Model.Phones[i];
+                            <div class="telefone d-flex mb-2">
+                                <input type="hidden" name="Phones[@i].ID" value="@phone.ID"  />
+                                <input type="hidden" name="Phones[@i].Debtor_ID" value="@phone.Debtor_ID"/>
+                                <label>•</label>
+                                <input name="Phones[@i].PhoneNumber" class="form-control no-input" data-id-phone="@phone.ID" data-debtor-id="@phone.Debtor_ID" value="@phone.PhoneNumber" readonly />
+                                <button onclick="removePhone(this)" class="btn btn-danger">
+                                    <span class="material-icons">
+                                        delete
+                                    </span>
+                                </button>
+                            </div>
+                        }                    
+                    }
+                </div>               
+            </div>
+            
+            <div class="form-group col-md-12">
                 <button type="submit" value="Cadastrar" class="btn btn-success">
                     <span class="material-icons">
                         how_to_reg
@@ -49,7 +85,27 @@
             </div>
         </div>
     </form>
-   
+
+    <div id="modal-telefone" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer" onclick="">
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 
@@ -57,4 +113,63 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        $('#btn-adicionar-telefone').click(function () {            
+            var phone = $('#input-telefone').val();
+
+            if (!phone)
+            {
+                $('.txt-error').show();
+                return;
+            }
+
+            var qtdPhone = $('.telefones .telefone').length;        
+
+            var divPhone = $(
+                `<div class="telefone d-flex mb-2">
+                    <input type="hidden" name="Phones[${qtdPhone}].Debtor_ID" value="@Model.ID"/>
+                    <label>•</label>
+                    <input class="form-control no-input input-phone" name="Phones[${qtdPhone}].PhoneNumber" data-id-phone="#" value="• ${phone}" readonly />
+                    <button onclick="removePhone(this)" class="btn btn-danger">
+                        <span class="material-icons">
+                                delete
+                            </span>
+                    </button>
+                </div>`
+            );
+
+            $('.telefones').append(divPhone);
+            $('.no-input').mask('(00) 0000-0000');
+            $('#input-telefone').val('');
+            $('.txt-error').hide();       
+        })
+             
+        function removePhone(btn){
+            var parent = $(btn).parent();
+            var idPhone = $(parent).find('.input-phone').attr('data-id-phone');
+
+            if (idPhone != '#') {
+                showCustomModal(
+                    'Deletar',
+                    'Deseja realmente deletar esse telefone ?',
+                    'Sim',
+                    'Não',
+                    function () {
+                        $.post('/Phone/Delete', { id }, (result) => {                            
+                            alert(result.data);
+                        });
+                    },
+                    function () {
+                        $('.modal').modal('hide');
+                    }
+                );
+            }
+
+            parent.remove();
+            $('.no-input').each((i,x) => {             
+                $(x).attr('name', `Phones[${i}].PhoneNumber`);
+            })
+        }
+    </script>
 }

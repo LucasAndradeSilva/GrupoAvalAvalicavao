@@ -11,18 +11,20 @@ namespace GrupoAval.Controllers
 {
 	public class DebtorController : Controller
 	{
-		private IDebtorInterface _debtor;
+		private IDebtorInterface _debtorService;
+        private IPhoneInterface _phoneService;
 
-        public DebtorController(IDebtorInterface debtor)
+        public DebtorController(IDebtorInterface debtor, IPhoneInterface phoneService)
         {
-            _debtor = debtor;
+            _debtorService = debtor;
+            _phoneService = phoneService;
         }
-        
+
         public async Task<IActionResult> IndexAsync()
 		{
 			try
 			{
-				var result = await _debtor.ListDebtor();
+				var result = await _debtorService.ListDebtor();
 
 				if (!result.Success)
 				{
@@ -43,7 +45,7 @@ namespace GrupoAval.Controllers
 		{
 			try
 			{
-				var result = await _debtor.GetDebtor(id);
+				var result = await _debtorService.GetDebtor(id);
                 return View((Debtor)result.Data);
             }
 			catch (Exception)
@@ -63,7 +65,7 @@ namespace GrupoAval.Controllers
 		{
 			try
 			{
-                var result = await _debtor.InsertDebtor(debtor);
+                var result = await _debtorService.InsertDebtor(debtor);				
 
 				if (result.Success)				
 					using(new Alert(AlertType.success, result.Data, HttpContext));
@@ -82,7 +84,7 @@ namespace GrupoAval.Controllers
 		{
             try
             {
-                var result = await _debtor.GetDebtor(id);
+                var result = await _debtorService.GetDebtor(id);
                 return View((Debtor)result.Data);
             }
             catch (Exception)
@@ -96,8 +98,10 @@ namespace GrupoAval.Controllers
 		public async Task<IActionResult> EditAsync(Debtor debtor)
 		{
 			try
-			{
-				var result = await _debtor.UpdateDebtor(debtor);
+			{			
+				var result = await _debtorService.UpdateDebtor(debtor);
+				var phonesJoin = string.Join(',', debtor.Phones.Where(x => x.ID == 0).Select(x => x.PhoneNumber));
+				await _phoneService.BulkInsertPhones(debtor.ID, phonesJoin);
 
                 if (result.Success)
                     using (new Alert(AlertType.success, result.Data, HttpContext)) ;
@@ -117,7 +121,7 @@ namespace GrupoAval.Controllers
         {
             try
 			{
-				var result = await _debtor.DeleteDebtor(id);
+				var result = await _debtorService.DeleteDebtor(id);
 
                 if (result.Success)
                     using (new Alert(AlertType.success, result.Data, HttpContext)) ;
