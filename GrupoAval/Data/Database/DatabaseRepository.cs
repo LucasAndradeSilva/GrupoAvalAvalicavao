@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 
 namespace GrupoAval.Data.Database
@@ -7,14 +8,24 @@ namespace GrupoAval.Data.Database
     public class DatabaseRepository : IDatabaseIntaface
     {
         private SqlConnection _sqlConnection;
+        private IConfiguration _configuration;    
         public DatabaseRepository(IConfiguration configuration)
         {
-            _sqlConnection = new SqlConnection(configuration["ConnectionStrings:Default"]);
+			_configuration = configuration;
+			_sqlConnection = new SqlConnection(_configuration["ConnectionStrings:Default"]);
         }
 
-        private SqlConnection GetConnection()
+        private void BuildConnection()
         {
-            _sqlConnection.Open();
+			_sqlConnection = new SqlConnection(_configuration["ConnectionStrings:Default"]);            
+		}
+
+
+		private SqlConnection GetConnection()
+        {
+            BuildConnection();
+
+			_sqlConnection.Open();
 
             return _sqlConnection;
         }
@@ -58,7 +69,26 @@ namespace GrupoAval.Data.Database
 
             return default;
         }
+        public async Task<IEnumerable<T>> QueryAsync<T>(string sql, Func<SqlMapper.GridReader, List<T>> map, object parameters = null)
+        {
+            var connection = GetConnection();
+            try
+            {
+                var gridReader = connection.QueryMultiple(sql, parameters);
+                return map(gridReader);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            finally
+            {
+                await connection.CloseAsync();
+                await connection.DisposeAsync();
+            }
 
+            return default;          
+        }
         public SqlCommand GetCommand(string command, object parameters, SqlConnection connection)
         {
             var resul = new SqlCommand(command.Trim(), connection);

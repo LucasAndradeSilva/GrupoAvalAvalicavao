@@ -13,11 +13,15 @@ namespace GrupoAval.Controllers
 	{
 		private IDebtorInterface _debtorService;
         private IPhoneInterface _phoneService;
+        private IContractInterface _contractService;
+		private IInstallmentInterface _installmentService;
 
-        public DebtorController(IDebtorInterface debtor, IPhoneInterface phoneService)
+        public DebtorController(IDebtorInterface debtor, IPhoneInterface phoneService, IInstallmentInterface installmentService, IContractInterface contractService)
         {
             _debtorService = debtor;
             _phoneService = phoneService;
+            _installmentService = installmentService;
+            _contractService = contractService;
         }
 
         public async Task<IActionResult> IndexAsync()
@@ -45,8 +49,10 @@ namespace GrupoAval.Controllers
 		{
 			try
 			{
-				var result = await _debtorService.GetDebtor(id);
-                return View((Debtor)result.Data);
+				var result = (Debtor)(await _debtorService.GetDebtor(id)).Data;
+				result.Phones = (List<Phone>)(await _phoneService.ListPhones(id)).Data;
+				result.Contracts = (List<Contract>)(await _contractService.ListContracts(id)).Data;
+                return View(result);
             }
 			catch (Exception)
 			{
@@ -84,8 +90,9 @@ namespace GrupoAval.Controllers
 		{
             try
             {
-                var result = await _debtorService.GetDebtor(id);
-                return View((Debtor)result.Data);
+                var result = (Debtor)(await _debtorService.GetDebtor(id)).Data;
+                result.Phones = (List<Phone>)(await _phoneService.ListPhones(id)).Data;
+                return View(result);
             }
             catch (Exception)
             {

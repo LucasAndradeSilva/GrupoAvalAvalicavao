@@ -18,7 +18,7 @@ namespace GrupoAval.Services.Repository
             Result result;
             try
             {
-                var data = await database.QueryFirstAsync<Result>("P_BulkInsertPhones", new
+                var data = await database.QueryFirstAsync<string>("P_BulkInsertPhones", new
                 {
                     Debtor_ID,
                     PhoneNumbers
@@ -51,5 +51,24 @@ namespace GrupoAval.Services.Repository
 
             return result;
         }
-    }
+
+		public async Task<Result> ListPhones(int Debtor_ID)
+		{
+			Result result;
+			try
+			{
+				var data = await database.QueryMultipleAsync<Phone>("P_GetPhones", new
+				{
+					Debtor_ID
+				});
+				result = new Result(data);
+			}
+			catch (Exception ex)
+			{
+				result = new Result("Ocorreu um erro");
+			}
+
+			return result;
+		}
+	}
 }

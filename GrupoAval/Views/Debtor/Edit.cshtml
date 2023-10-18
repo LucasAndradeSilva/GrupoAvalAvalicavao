@@ -54,10 +54,9 @@
                             var phone = Model.Phones[i];
                             <div class="telefone d-flex mb-2">
                                 <input type="hidden" name="Phones[@i].ID" value="@phone.ID"  />
-                                <input type="hidden" name="Phones[@i].Debtor_ID" value="@phone.Debtor_ID"/>
-                                <label>•</label>
+                                <input type="hidden" name="Phones[@i].Debtor_ID" value="@phone.Debtor_ID"/>                      
                                 <input name="Phones[@i].PhoneNumber" class="form-control no-input" data-id-phone="@phone.ID" data-debtor-id="@phone.Debtor_ID" value="@phone.PhoneNumber" readonly />
-                                <button onclick="removePhone(this)" class="btn btn-danger">
+                                <button onclick="removePhone(this)" class="btn btn-danger ml-2">
                                     <span class="material-icons">
                                         delete
                                     </span>
@@ -128,10 +127,9 @@
 
             var divPhone = $(
                 `<div class="telefone d-flex mb-2">
-                    <input type="hidden" name="Phones[${qtdPhone}].Debtor_ID" value="@Model.ID"/>
-                    <label>•</label>
-                    <input class="form-control no-input input-phone" name="Phones[${qtdPhone}].PhoneNumber" data-id-phone="#" value="• ${phone}" readonly />
-                    <button onclick="removePhone(this)" class="btn btn-danger">
+                    <input type="hidden" name="Phones[${qtdPhone}].Debtor_ID" value="@Model.ID"/>                    
+                    <input class="form-control no-input input-phone" name="Phones[${qtdPhone}].PhoneNumber" data-id-phone="#" value="${phone}" readonly />
+                        <button onclick="removePhone(this)" class="btn btn-danger  ml-2">
                         <span class="material-icons">
                                 delete
                             </span>
@@ -156,8 +154,12 @@
                     'Sim',
                     'Não',
                     function () {
-                        $.post('/Phone/Delete', { id }, (result) => {                            
-                            alert(result.data);
+                        $.post('/Phone/Delete', { id }, (result) => {
+                            if(result.success)                            
+                                showGenericAlert(result.data, 'success')                               
+                            else
+                                showGenericAlert(result.data, 'danger')
+
                         });
                     },
                     function () {

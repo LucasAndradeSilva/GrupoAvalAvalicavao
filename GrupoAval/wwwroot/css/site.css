@@ -37,10 +37,9 @@ body {
 }
 
 .no-input{
-    border: 0px!important;
-    width: 40%!important;
-       
+    border: 0px!important;     
 }
+
 
 .input-phone:focus {
     width: 40% !important;
@@ -48,4 +47,10 @@ body {
 
 .telefone label {
     margin-top: 7px;
+}
+
+.telefones {
+    max-height: 60%;
+    max-width: 50%;
+    overflow: auto;
 }

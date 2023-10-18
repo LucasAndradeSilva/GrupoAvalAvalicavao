@@ -25,6 +25,8 @@ namespace GrupoAval
 			app.UseRouting();
 			app.UseAuthorization();
 
+			app.UseRequestLocalization("pt-br");
+
 			app.MapControllerRoute(
 				name: "default",
 				pattern: "{controller=Debtor}/{action=Index}/{id?}");

@@ -2,7 +2,7 @@ CREATE DATABASE DB_CobrancaAvalicacao
 
 USE DB_CobrancaAvalicacao
 
-Select * from Tb_Debtor
+Select * from Tb_Installment
 
 CREATE TABLE Tb_Debtor (
     ID INT IDENTITY PRIMARY KEY,
@@ -11,19 +11,19 @@ CREATE TABLE Tb_Debtor (
 );
 
 CREATE TABLE Tb_Contract (
-    ID INT IDENTITY PRIMARY KEY,
+    ContractId INT IDENTITY PRIMARY KEY,
     Debtor_ID INT,
     ContractNumber VARCHAR(20),
     FOREIGN KEY (Debtor_ID) REFERENCES Tb_Debtor(ID)
 );
 
 CREATE TABLE Tb_Installment (
-    ID INT IDENTITY PRIMARY KEY,
+    InstallmentId INT IDENTITY PRIMARY KEY,
     Contract_ID INT,
     Amount DECIMAL(10, 2),
     DueDate DATE,
     PaymentDate DATE,
-    FOREIGN KEY (Contract_ID) REFERENCES Tb_Contract(ID)
+    FOREIGN KEY (Contract_ID) REFERENCES Tb_Contract(ContractId)
 );
 
 CREATE TABLE Tb_Phone (
@@ -40,7 +40,7 @@ CREATE TABLE Tb_Phone (
 -- Procs do Devedor
 CREATE PROCEDURE P_InsertDebtor
     @Name VARCHAR(255),
-    @CPF VARCHAR(11)
+    @CPF VARCHAR(14)
 AS
 BEGIN
     INSERT INTO Tb_Debtor ("Name", CPF)
@@ -52,7 +52,7 @@ END;
 CREATE PROCEDURE P_UpdateDebtor
     @ID INT,
     @Name VARCHAR(255),
-    @CPF VARCHAR(11)
+    @CPF VARCHAR(14)
 AS
 BEGIN	
     UPDATE Tb_Debtor
@@ -115,3 +115,92 @@ BEGIN
 
 	SELECT 'Telefone deletado com sucesso!'
 END;
+
+CREATE PROCEDURE P_GetPhones
+  @Debtor_ID INT
+AS
+BEGIN
+    SELECT * FROM Tb_Phone Where Debtor_ID = @Debtor_ID
+END;
+
+
+-- Procs Contrato
+CREATE PROCEDURE P_CreateContractWithInstallments
+	@DebtorID INT
+AS
+BEGIN    
+    DECLARE @ContractNumber INT
+    DECLARE @ContractID INT           
+        
+    SET @ContractNumber = RAND() * 12346789
+        
+    INSERT INTO Tb_Contract (Debtor_ID, ContractNumber)
+    VALUES (@DebtorID, @ContractNumber)
+        
+    SET @ContractID = SCOPE_IDENTITY()
+        
+    DECLARE @InstallmentAmount DECIMAL(10, 2)
+    DECLARE @DueDate DATE
+    DECLARE @i INT
+    DECLARE @StartMonth INT
+
+	SET @InstallmentAmount = RAND() * 321
+	SET @DueDate = GETDATE()
+    SET @i = 1
+	SET @StartMonth = -2
+    
+    WHILE @i <= 3
+    BEGIN                 
+		IF @StartMonth = 0
+			SET @StartMonth = 1
+			
+        SET @DueDate = DATEADD(MONTH, @StartMonth, @DueDate)
+                
+        INSERT INTO Tb_Installment (Contract_ID, Amount, DueDate)
+        VALUES (@ContractID, @InstallmentAmount, @DueDate)
+        
+        SET @i = @i + 1
+		SET @StartMonth = @StartMonth + 1
+    END
+
+	SELECT 'Contrato criado com sucesso!'
+END
+
+CREATE PROCEDURE P_ListContractsByDebtorID
+    @DebtorID INT
+AS
+BEGIN
+    SELECT ContractId, ContractNumber
+    FROM Tb_Contract
+    WHERE Debtor_ID = @DebtorID
+END
+
+CREATE PROCEDURE P_ListContractsAndInstallmentsByDebtorID
+    @DebtorID INT
+AS
+BEGIN
+    SELECT C.ContractId, C.ContractNumber, C.Debtor_ID, I.InstallmentId, I.Amount, I.DueDate, I.PaymentDate, I.Contract_ID
+    FROM Tb_Contract C
+    INNER JOIN Tb_Installment I ON C.ContractId = I.Contract_ID
+    WHERE C.Debtor_ID = @DebtorID
+END
+
+-- Procs Parcelas
+
+CREATE PROCEDURE P_ListInstallmentsByContractID
+    @ContractID INT
+AS
+BEGIN
+    SELECT InstallmentId, Amount, DueDate, PaymentDate
+    FROM Tb_Installment
+    WHERE Contract_ID = @ContractID
+END
+
+CREATE PROCEDURE P_PaymentInstallments
+    @InstallmentIDs VARCHAR(MAX)
+AS
+BEGIN    
+    UPDATE Tb_Installment
+    SET PaymentDate = GETDATE()
+    WHERE InstallmentId IN (SELECT value FROM STRING_SPLIT(@InstallmentIDs, ','))
+END

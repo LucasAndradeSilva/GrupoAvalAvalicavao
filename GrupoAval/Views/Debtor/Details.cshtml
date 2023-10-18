@@ -1,40 +1,161 @@
 ﻿@model GrupoAval.Models.Debtor
 
 @{
-    ViewData["Title"] = "Detalhes";
+    ViewData["Title"] = "Detalhes"; 
 }
 
 <div class="card shadow p-3">
     <h2 class="text-center">Detalhes</h2>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ID)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ID)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CPF)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CPF)
-        </dd>
-    </dl>
 
-    <div>
+    <div class="row ">
+        <div class="col-sm-6">
+
+            <h4>Dados</h4>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <strong>@Html.DisplayNameFor(model => model.ID)</strong>
+                </div>
+                <div class="col-sm-10">
+                    @Html.DisplayFor(model => model.ID)
+                </div>
+                <div class="col-sm-2">
+                    <strong>@Html.DisplayNameFor(model => model.Name)</strong>
+                </div>
+                <div class="col-sm-10">
+                    @Html.DisplayFor(model => model.Name)
+                </div>
+                <div class="col-sm-2">
+                    <strong>@Html.DisplayNameFor(model => model.CPF)</strong>
+                </div>
+                <div class="col-sm-10">
+                    @Html.DisplayFor(model => model.CPF)
+                </div>
+            </div>
+        </div>
+      
+        <div class="col-sm-6 ">
+
+            <h4>Telefones</h4>
+
+            <div class="telefones">
+                @if ((Model?.Phones?.Count ?? 0) > 0)
+                {
+                    @for (int i = 0; i < Model.Phones.Count; i++)
+                    {
+                        var phone = Model.Phones[i];
+                        <div class="telefone d-flex mb-2">
+                            <input class="form-control" value="@phone.PhoneNumber" disabled />
+                        </div>
+                    }
+                }
+                else
+                {
+                    <h6>Nenhum telefone encontrado</h6>
+                }
+            </div>
+        </div>
+
+        @if ((Model?.Contracts?.Count ?? 0) > 0)
+        {
+            <div class="col-sm-12 mt-5 ">
+
+                <h4>Contratos</h4>
+
+                <div class="contracts">
+                    @foreach (var contract in Model.Contracts)
+                    {
+                        var nextInstallment = contract.Installments.FirstOrDefault(x => x.PaymentDate is null);
+                        var dued = nextInstallment.DueDate < DateTime.Now;
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <strong>Número contrato</strong>
+                            </div>
+                            <div class="col-sm-10">
+                                @contract.ContractNumber
+                            </div>
+                            <div class="col-sm-2">
+                                <strong>Data vencimento da próxima parcela</strong>
+                            </div>
+                            <div class="col-sm-10">
+                                @nextInstallment.DueDate.ToShortDateString()
+                                @if (dued)
+                                {
+                                    <span class="badge badge-danger">Vencida</span>
+                                }
+                            </div>
+                            <div class="col-sm-2">
+                                <strong>Saldo devetor</strong>
+                            </div>
+                            <div class="col-sm-10">
+                                @contract.CalculateAmountFees().ToString("C2")
+                                @if (dued)
+                                {
+                                    
+                                }
+                            </div>
+                            <div class="col-sm-12 mt-3">
+                                <button class="btn btn-primary">
+                                    <span class="material-icons">
+                                        attach_money
+                                    </span>
+                                    Ver parcelas
+                                </button>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        }
+             
+    </div>
+
+
+    <div class="mt-5">
         <a asp-action="Index" class="btn btn-secondary">
             <span class="material-icons">
                 arrow_back
             </span>
             Voltar a lista
         </a>
+        <a href="/Debtor/Edit?id=@Model.ID" class="btn btn-primary">
+            <span class="material-icons">
+                edit
+            </span>
+            Editar
+        </a>
+        <button id="btn-contrato" class="btn btn-success">
+            <span class="material-icons">
+                request_quote
+            </span>
+            Criar Novo Contrato
+        </button>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        $('#btn-contrato').click(function (){
+            showCustomModal(
+                'Criar Contrato',
+                'Deseja realmente criar um novo contrato ?',
+                'Sim',
+                'Não',
+                function () {
+                    $.post('/Contract/Create', { debtor_id: '@Model.ID' }, (result) => {
+                        if (result.success)
+                            window.location.reload();
+                        else
+                            showGenericAlert(result.data, 'danger')
+                    });
+                },
+                function () {
+                    $('.modal').modal('hide');
+                }
+            );
+        })
+    </script>
+}
 

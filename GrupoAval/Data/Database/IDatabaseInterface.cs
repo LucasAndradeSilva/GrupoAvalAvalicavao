@@ -9,6 +9,8 @@ namespace GrupoAval.Data.Database
 		Task<IEnumerable<T>> QueryMultipleAsync<T>(string sql, object @params = null);
 		Task<T> QueryFirstAsync<T>(string sql, object @params = null);
         Task QueryFirstAsync(string sql, object @params = null);
-        SqlCommand GetCommand(string command, object parameters, SqlConnection connection);     
-	}
+        SqlCommand GetCommand(string command, object parameters, SqlConnection connection);
+        Task<IEnumerable<T>> QueryAsync<T>(string sql, Func<SqlMapper.GridReader, List<T>> map, object parameters = null);
+
+    }
 }
