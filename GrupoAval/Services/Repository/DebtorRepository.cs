@@ -19,7 +19,7 @@ namespace GrupoAval.Services.Repository
             Result result;
             try
             {
-                var data = await database.QueryFirstAsync<Result>("P_DeleteDebtor", new
+                var data = await database.QueryFirstAsync<string>("P_DeleteDebtor", new
                 {
                     ID
                 });
