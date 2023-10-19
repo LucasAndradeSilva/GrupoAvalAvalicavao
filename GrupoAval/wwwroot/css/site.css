@@ -54,3 +54,14 @@ body {
     max-width: 50%;
     overflow: auto;
 }
+.contracts {
+    max-height: 90%;
+    overflow: auto;
+}
+footer{
+    position: unset!important
+}
+
+.custom-popover{
+    z-index: 1000
+}

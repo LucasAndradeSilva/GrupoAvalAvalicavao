@@ -14,7 +14,7 @@ CREATE TABLE Tb_Contract (
     ContractId INT IDENTITY PRIMARY KEY,
     Debtor_ID INT,
     ContractNumber VARCHAR(20),
-    FOREIGN KEY (Debtor_ID) REFERENCES Tb_Debtor(ID)
+    FOREIGN KEY (Debtor_ID) REFERENCES Tb_Debtor(ID) ON DELETE CASCADE
 );
 
 CREATE TABLE Tb_Installment (
@@ -23,14 +23,14 @@ CREATE TABLE Tb_Installment (
     Amount DECIMAL(10, 2),
     DueDate DATE,
     PaymentDate DATE,
-    FOREIGN KEY (Contract_ID) REFERENCES Tb_Contract(ContractId)
+    FOREIGN KEY (Contract_ID) REFERENCES Tb_Contract(ContractId) ON DELETE CASCADE
 );
 
 CREATE TABLE Tb_Phone (
     ID INT IDENTITY PRIMARY KEY,
     Debtor_ID INT,
     PhoneNumber VARCHAR(20),
-    FOREIGN KEY (Debtor_ID) REFERENCES Tb_Debtor(ID)
+    FOREIGN KEY (Debtor_ID) REFERENCES Tb_Debtor(ID) ON DELETE CASCADE
 );
 
 -- ==============
@@ -151,11 +151,11 @@ BEGIN
     
     WHILE @i <= 3
     BEGIN                 
-		IF @StartMonth = 0
-			SET @StartMonth = 1
-			
-        SET @DueDate = DATEADD(MONTH, @StartMonth, @DueDate)
-                
+		IF @StartMonth < 0			
+			SET @DueDate = DATEADD(MONTH, @StartMonth, @DueDate)	
+		Else
+			SET @DueDate = GETDATE()
+			                        
         INSERT INTO Tb_Installment (Contract_ID, Amount, DueDate)
         VALUES (@ContractID, @InstallmentAmount, @DueDate)
         

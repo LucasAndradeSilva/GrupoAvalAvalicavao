@@ -1,6 +1,9 @@
-﻿namespace GrupoAval.Services.Interface
+﻿using GrupoAval.Models;
+
+namespace GrupoAval.Services.Interface
 {
-	public interface IInstallmentInterface
-	{
-	}
+    public interface IInstallmentInterface
+    {
+        Task<Result> ListInstallment(int contractId);
+    }
 }

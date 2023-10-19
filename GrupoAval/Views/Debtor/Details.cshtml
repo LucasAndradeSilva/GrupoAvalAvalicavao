@@ -3,17 +3,27 @@
 @{
     ViewData["Title"] = "Detalhes"; 
 }
-
+  <style>
+        .custom-popover {
+            display: none;
+            position: absolute;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 3px 3px 5px #888888;
+            z-index: 1000;
+        }
+    </style>
 <div class="card shadow p-3">
     <h2 class="text-center">Detalhes</h2>
     <hr />
 
-    <div class="row ">
+    <div class="row" style="height: 34rem;">
         <div class="col-sm-6">
 
             <h4>Dados</h4>
 
-            <div class="row">
+            <div class="row ">
                 <div class="col-sm-2">
                     <strong>@Html.DisplayNameFor(model => model.ID)</strong>
                 </div>
@@ -36,7 +46,7 @@
         </div>
       
         <div class="col-sm-6 ">
-
+            
             <h4>Telefones</h4>
 
             <div class="telefones">
@@ -59,28 +69,24 @@
 
         @if ((Model?.Contracts?.Count ?? 0) > 0)
         {
-            <div class="col-sm-12 mt-5 ">
+            <div class="col-sm-12 mt-5 " style=" height: 22rem;">
 
                 <h4>Contratos</h4>
 
-                <div class="contracts">
+                <div class="contracts border p-3">
                     @foreach (var contract in Model.Contracts)
                     {
-                        var nextInstallment = contract.Installments.FirstOrDefault(x => x.PaymentDate is null);
-                        var dued = nextInstallment.DueDate < DateTime.Now;
-                        <div class="row">
-                            <div class="col-sm-2">
-                                <strong>Número contrato</strong>
-                            </div>
-                            <div class="col-sm-10">
-                                @contract.ContractNumber
-                            </div>
+                        var nextInstallment = contract.Installments.FirstOrDefault(x => x.PaymentDate is null);                        
+                        <div class="row contract border mx-2 p-3 mt-2">
+                            <div class="col-sm-12 bg-secondary text-white text-center mb-2">
+                                <strong>Número contrato</strong> @contract.ContractNumber
+                            </div>                       
                             <div class="col-sm-2">
                                 <strong>Data vencimento da próxima parcela</strong>
                             </div>
                             <div class="col-sm-10">
-                                @nextInstallment.DueDate.ToShortDateString()
-                                @if (dued)
+                                @nextInstallment.DueDate.Value.ToShortDateString()
+                                @if (nextInstallment.Due)
                                 {
                                     <span class="badge badge-danger">Vencida</span>
                                 }
@@ -89,29 +95,31 @@
                                 <strong>Saldo devetor</strong>
                             </div>
                             <div class="col-sm-10">
-                                @contract.CalculateAmountFees().ToString("C2")
-                                @if (dued)
+                                @contract.AmountFess.ToString("C2")
+                                @if (nextInstallment.Due)
                                 {
-                                    
+                                    <span class="badge badge-danger Popover" data-content="Saldo com acrescimo de <span class='text-danger'>@contract.Fees.ToString("C2")</span> de juros com @contract.QtdDueInstallments paracelas vencidas">
+                                        <span class="material-icons" style="font-size: 15px">
+                                            info
+                                        </span>
+                                    </span>                                    
                                 }
                             </div>
                             <div class="col-sm-12 mt-3">
-                                <button class="btn btn-primary">
+                                <button class="btn btn-primary" onclick="OpenInstallments(@contract.ContractId)">
                                     <span class="material-icons">
                                         attach_money
                                     </span>
                                     Ver parcelas
                                 </button>
                             </div>
-                        </div>
+                        </div>                        
                     }
 
                 </div>
             </div>
-        }
-             
+        }       
     </div>
-
 
     <div class="mt-5">
         <a asp-action="Index" class="btn btn-secondary">
@@ -135,8 +143,26 @@
     </div>
 </div>
 
+<div id="modal-Installment" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">                
+                <h3>Parcelas</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="$('#modal-Installment .modal-body').empty()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+            </div>            
+        </div>
+    </div>
+</div>
+
 @section Scripts{
     <script>
+        
+
         $('#btn-contrato').click(function (){
             showCustomModal(
                 'Criar Contrato',
@@ -156,6 +182,14 @@
                 }
             );
         })
+
+        function OpenInstallments(contractId){
+            $.get('/Installment/ModalInstallment', { contractId }, (result) => {
+                $('#modal-Installment .modal-body').append(result);
+                $('#modal-Installment').modal('show');
+            });
+        }
+        
     </script>
 }
 
